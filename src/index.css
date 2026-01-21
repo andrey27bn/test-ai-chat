@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+@layer base {
+  html, body, #root {
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+  }
+}
+
+/* Стилизация Markdown */
+.prose pre {
+  background: #1e293b !important;
+  padding: 1.25rem !important;
+  border-radius: 0.75rem !important;
+  border: 1px solid #334155 !important;
+  margin: 1rem 0 !important;
+}
+
+.prose code {
+  color: #60a5fa !important;
+  background: #1e293b;
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.25rem;
+}
+
+.prose p {
+  margin-bottom: 1rem;
+  line-height: 1.7;
+}
