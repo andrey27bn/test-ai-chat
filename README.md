@@ -1,73 +1,79 @@
-# React + TypeScript + Vite
+# High-Performance AI Chat Interface
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+[![AI Chat Preview]()](https://ai-chat-sepia-theta.vercel.app/)
 
-Currently, two official plugins are available:
+> **[🚀 ПЕРЕЙТИ К ДЕМО](https://ai-chat-sepia-theta.vercel.app/)**
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 📖 Описание проекта
+Данный проект представляет собой высокопроизводительный интерфейс чата для LLM-платформ. Основной фокус сделан на обработке экстремально больших объемов текстовых данных (History > 5MB) и высокоскоростном потоковом (streaming) обновлении ответов без блокировки основного потока браузера (UI Thread).
 
-## React Compiler
+### Ключевые показатели:
+- **Скорость:** Приход чанков каждые 10-20 мс.
+- **Объем:** Генерация до 10,000 слов в одном сообщении.
+- **Плавность:** Стабильные 60 FPS даже во время интенсивного стриминга.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## 🛠 Технологический стек
+* **Framework:** React 18+ (Vite)
+* **Language:** TypeScript
+* **State Management:** Zustand
+* **Styling:** Tailwind CSS v4
+* **Virtualization:** React Virtuoso
+* **Markdown:** Marked.js (с мемоизацией)
+* **Icons:** Lucide-React
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## ⚡ Технические решения и оптимизации
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 1. Виртуализация списка (Windowing)
+Использование `react-virtuoso` позволяет рендерить только видимые сообщения. Это предотвращает "падение" браузера при накоплении истории сообщений объемом более 5МБ, так как количество активных DOM-узлов остается минимальным.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### 2. Zero UI Freezes (Streaming без лагов)
+Генерация текста реализована через асинхронный цикл с использованием `await new Promise(resolve => setTimeout(resolve, 0))`. Это позволяет Event Loop браузера обрабатывать ввод пользователя (инпут) и анимации скролла между чанками текста, предотвращая "замирание" интерфейса.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### 3. Оптимизация парсинга Markdown
+Для рендеринга используется `marked` с агрессивной мемоизацией через `React.memo` и `useMemo`. Тяжелый процесс преобразования текста в HTML происходит только тогда, когда контент действительно изменился.
+
+### 4. Умный автоскролл
+Реализован гибридный механизм скролла:
+- **Auto-follow:** Автоматическое прилипание к низу, если пользователь находится в зоне конца чата.
+- **Manual Override:** Если пользователь скроллит вверх для чтения истории, автоскролл временно отключается, чтобы не мешать чтению.
+
+---
+
+## 🚀 Как запустить локально
+
+1.  **Клонируйте репозиторий:**
+    ```bash
+    git clone (https://github.com/andrey27bn/test-ai-chat.git)
+    cd ai-chat-test
+    ```
+
+2.  **Установите зависимости:**
+    ```bash
+    npm install
+    ```
+
+3.  **Запустите сервер для разработки:**
+    ```bash
+    npm run dev
+    ```
+
+4.  **Соберите проект для продакшена:**
+    ```bash
+    npm run build
+    ```
+
+---
+
+## 📝 Требования ТЗ (выполнено)
+- [x] Отсутствие фризов UI (60 FPS).
+- [x] Эмуляция быстрой генерации (10мс/чанк).
+- [x] Поддержка Markdown (Bold, Code Blocks).
+- [x] Виртуализация длинных сообщений.
+- [x] Кнопка принудительной остановки генерации.
+- [x] Возможность ввода текста во время работы AI.
