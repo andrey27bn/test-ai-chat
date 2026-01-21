@@ -1,6 +1,6 @@
 # High-Performance AI Chat Interface
 
-[![AI Chat Preview]()](https://ai-chat-sepia-theta.vercel.app/)
+[![AI Chat Preview](https://github.com/andrey27bn/test-ai-chat/blob/main/public/%D1%87%D0%B0%D1%82.png?raw=true)](https://ai-chat-sepia-theta.vercel.app/)
 
 > **[🚀 ПЕРЕЙТИ К ДЕМО](https://ai-chat-sepia-theta.vercel.app/)**
 
@@ -49,7 +49,7 @@
 
 1.  **Клонируйте репозиторий:**
     ```bash
-    git clone (https://github.com/andrey27bn/test-ai-chat.git)
+    git clone https://github.com/andrey27bn/test-ai-chat.git
     cd ai-chat-test
     ```
 
